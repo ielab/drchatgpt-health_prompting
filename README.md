@@ -43,4 +43,6 @@ List of results files:
 	- `misinfo-answers-2021-yesnounsure-reversed-polarity.csv`: TREC 2021 results (50 topics) obtained with prompt containing direct question and yes/no/unsure instruction
 	- `misinfo-answers-2022-yesnounsure-reversed-polarity.csv`: TREC 2022 results (50 topics) obtained with prompt containing direct question and yes/no/unsure instruction
 
+## Analysis
 
+The [analysis](./analysis) folder contains scripts and a notebook for the analysis of the results and the creation of all the plots used for the paper and presestion. It has its own [README.md](./analysis/README.md).
