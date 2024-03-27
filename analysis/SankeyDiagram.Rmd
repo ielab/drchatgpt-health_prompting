@@ -1,0 +1,95 @@
+---
+title: "Health Misinformation Sankey Diagram"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+## Install dependencies
+
+```{r}
+#install.packages('devtools')
+library(devtools)
+devtools::install_github("davidsjoberg/ggsankey")
+```
+
+## Load data
+
+```{r}
+library(ggsankey)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(scales)
+```
+
+```{r}
+df <- mtcars %>%
+  make_long(cyl, vs, am, gear, carb)
+```
+
+
+```{r}
+ggplot(df, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey()
+```
+
+```{r}
+all_results = read.csv('all_flipped_results.csv')
+all_results$Correct_rq1[all_results$Correct_rq1 == 'True'] <- 'Correct'
+all_results$Correct_rq1[all_results$Correct_rq1 == 'False'] <- 'Incorrect'
+all_results$Correct_rq2[all_results$Correct_rq2 == 'True'] <- 'Correct'
+all_results$Correct_rq2[all_results$Correct_rq2 == 'False'] <- 'Incorrect'
+all_results$Stance_rq2[all_results$Stance_rq2 == 'in favour'] <- 'Supporting Evidence'
+all_results$Stance_rq2[all_results$Stance_rq2 == 'against'] <- 'Contrary Evidence'
+all_results$Stance = paste(all_results$Correct_rq1, all_results$Stance_rq2, sep=" &\n")
+```
+
+```{r}
+all_results_long <- all_results %>%
+  make_long(GroundTruth, Correct_rq1, Stance, Correct_rq2)
+```
+
+```{r]}
+# https://rpubs.com/techanswers88/sankey
+reagg <- all_results_long%>%
+  dplyr::group_by(x, node)%>%  # Here we are grouping the data by node and then we are taking the frequency of it 
+  tally()
+
+all_results_long_n <- merge(all_results_long, 
+             reagg, 
+             by.x = 'node', 
+             by.y = 'node', 
+             all.x = TRUE)
+```
+
+```{r}
+pl <- ggplot(all_results_long, aes(x = x, next_x = next_x, node = node , next_node = next_node, fill = factor(node), label = node)) +
+geom_sankey(flow.alpha = 0.5, node.color = "black", show.legend = FALSE) + 
+scale_x_discrete(labels=c("GroundTruth" = "Ground truth\n answer", "Correct_rq1" = "Question-only\n correctness\n (RQ1)", "Stance" = "Evidence-biased\n condition", "Correct_rq2" = "Evidence-biased\n correctness\n (RQ2)")) +
+scale_y_continuous(label = scales::percent_format()) +
+geom_sankey_label(color = "black", fill= "white") +
+theme_minimal() +
+scale_fill_viridis_d() +
+theme(legend.position = "none") +
+theme_sankey(base_size = 16) +
+theme(axis.title = element_blank(), axis.ticks = element_blank()  , panel.grid = element_blank()) +
+theme(plot.margin=unit(c(0,-0.02,0,-0.07), "null")) +
+labs(fill = 'Nodes')
+pl
+```
+
+```{r}
+dev.print(pdf, "../../papers/emnlp2023-healthgpt/Sections/figures/sankey.pdf", width=8, height=5)
+```
