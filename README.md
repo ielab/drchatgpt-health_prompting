@@ -1,6 +1,27 @@
 # How different prompts impact health answer correctness
 
-Code, results and data for "Dr ChatGPT tell me what I want to hear: How different prompts impact health answer correctness" EMNLP 2023
+Code, results and data for our paper:
+
+[Dr ChatGPT tell me what I want to hear: How different prompts impact health answer correctness](https://aclanthology.org/2023.emnlp-main.928/) EMNLP 2023
+
+```bibtex
+@inproceedings{koopman-zuccon-2023-dr,
+    title = "Dr {C}hat{GPT} tell me what {I} want to hear: How different prompts impact health answer correctness",
+    author = "Koopman, Bevan  and
+      Zuccon, Guido",
+    editor = "Bouamor, Houda  and
+      Pino, Juan  and
+      Bali, Kalika",
+    booktitle = "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+    month = dec,
+    year = "2023",
+    address = "Singapore",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2023.emnlp-main.928",
+    doi = "10.18653/v1/2023.emnlp-main.928",
+    pages = "15012--15022"
+}
+```
 
 
 ## Results
